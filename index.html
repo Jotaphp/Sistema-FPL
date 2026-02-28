@@ -3,44 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Cadastro</title>
+    <title>Sistema FPL</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Fila de Aposentadoria</h1>
+    <div class="app-container">
+        <aside class="sidebar">
+            <h2>Sistema FPL</h2>
+            <nav>
+                <button id="btn-inicial" class="menu-btn ativo" onclick="navegar('inicial')">🏠 Tela Inicial</button>
+                <button id="btn-cadastro" class="menu-btn" onclick="navegar('cadastro')">📝 Cadastro</button>
+                <button id="btn-fila" class="menu-btn" onclick="navegar('fila')">📊 Fila Completa</button>
+            </nav>
+        </aside>
 
-<form id="formulario">
-    <label for="nome">Nome Completo:</label>
-    <input type="text" id="nome" required>
+        <main class="content">
+            
+            <section id="tela-inicial" class="tela">
+                <h1>Bem-vindo ao Sistema</h1>
+                <p>Utilize o menu lateral para navegar entre as opções.</p>
+                <div class="card-boas-vindas">
+                    <h3>Visão Geral</h3>
+                    <p>Este sistema gerencia a fila de prioridade para aposentadoria baseada no cálculo de Índices, Tempo de Contribuição e Idade.</p>
+                </div>
+            </section>
 
-    <label for="sexo">Sexo:</label>
-    <select id="sexo" required>
-        <option value="">Selecione...</option>
-        <option value="F">Feminino</option>
-        <option value="M">Masculino</option>
-    </select>
+            <section id="tela-cadastro" class="tela oculta">
+                <h1>Cadastro de Servidor</h1>
+                
+                <form id="formulario">
+                    <div class="linha-form">
+                        <div class="coluna">
+                            <label for="nome">Nome Completo:</label>
+                            <input type="text" id="nome" required>
+                        </div>
+                        <div class="coluna">
+                            <label for="sexo">Sexo:</label>
+                            <select id="sexo" required>
+                                <option value="">Selecione...</option>
+                                <option value="F">Feminino</option>
+                                <option value="M">Masculino</option>
+                            </select>
+                        </div>
+                    </div>
 
-    <label for="dataNascimento">Data de Nascimento:</label>
-    <input type="date" id="dataNascimento" required>
+                    <div class="linha-form">
+                        <div class="coluna">
+                            <label for="dataNascimento">Data de Nascimento:</label>
+                            <input type="date" id="dataNascimento" required>
+                        </div>
+                        <div class="coluna">
+                            <label for="dataAdmissao">Data de Admissão:</label>
+                            <input type="date" id="dataAdmissao" required>
+                        </div>
+                    </div>
 
-    <label for="dataAdmissao">Data de Admissão:</label>
-    <input type="date" id="dataAdmissao" required>
+                    <label>Tempo Averbado:</label>
+                    <div class="grupo-averbado">
+                        <input type="number" id="anosAverbados" placeholder="Anos" min="0" value="0" required>
+                        <input type="number" id="mesesAverbados" placeholder="Meses" min="0" max="11" value="0" required>
+                        <input type="number" id="diasAverbados" placeholder="Dias" min="0" max="30" value="0" required>
+                    </div>
 
-    <label>Tempo Averbado:</label>
-    <div class="grupo-averbado">
-        <input type="number" id="anosAverbados" placeholder="Anos" min="0" value="0" required>
-        <input type="number" id="mesesAverbados" placeholder="Meses" min="0" max="11" value="0" required>
-        <input type="number" id="diasAverbados" placeholder="Dias" min="0" max="30" value="0" required>
+                    <button type="submit" id="btnSalvar">Salvar Registro</button>
+                </form>
+                <h2>Últimos Cadastrados</h2>
+                <ul id="listaDados"></ul>
+            </section>
+            <section id="tela-fila" class="tela oculta">
+                <h1>Fila de Prioridade</h1>
+                <div class="pesquisa-container">
+                    <input type="text" id="pesquisaNome" placeholder="🔍 Pesquisar por nome...">
+                </div>
+
+                <div class="tabela-container">
+                    <table class="tabela-excel">
+                        <thead>
+                            <tr>
+                                <th>Pos</th>
+                                <th>Índice Final</th>
+                                <th>Nome</th>
+                                <th>Sexo</th>
+                                <th>Nascimento</th>
+                                <th>Admissão</th>
+                                <th>Averbado (Dias)</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabelaDados">
+                            </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
     </div>
-
-    <button type="submit">Salvar Registro</button>
-</form>
-
-<h2>Registros Salvos</h2>
-<ul id="listaDados"></ul>
-    </div>
-
     <script src="script.js"></script>
 </body>
 </html>
