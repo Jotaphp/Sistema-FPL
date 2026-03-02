@@ -9,15 +9,12 @@ function toggleSidebar() {
     // O toggle liga e desliga a classe 'recolhida'
     sidebar.classList.toggle('recolhida');
 }
-
 // --- SISTEMA DE CONFIGURAÇÕES E MODO ESCURO ---
-
 // Abre e fecha o painel de configurações
 function toggleConfiguracoes() {
     const painel = document.getElementById('painel-config');
     painel.classList.toggle('aberto');
 }
-
 // Ativa ou desativa a classe do Modo Escuro
 function alternarModoEscuro() {
     const btnSwitch = document.getElementById('toggle-dark-mode');
@@ -30,7 +27,6 @@ function alternarModoEscuro() {
         localStorage.setItem('temaSistema', 'claro'); // Salva no navegador
     }
 }
-
 // Verifica a preferência salva assim que a página carrega
 document.addEventListener('DOMContentLoaded', () => {
     const temaSalvo = localStorage.getItem('temaSistema');
@@ -45,7 +41,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // (A chamada do consultarDados() original continua aqui)
     consultarDados(); 
 });
-
 // --- SISTEMA DE NAVEGAÇÃO DO MENU ---
 function navegar(idTelaAlvo) {
     // 1. Esconde todas as telas
@@ -57,7 +52,6 @@ function navegar(idTelaAlvo) {
     document.getElementById(`tela-${idTelaAlvo}`).classList.remove('oculta');
     document.getElementById(`btn-${idTelaAlvo}`).classList.add('ativo');
 }
-
 // --- LÓGICA DO FORMULÁRIO ---
 formulario.addEventListener('submit', async function(evento) {
     evento.preventDefault();
@@ -98,7 +92,6 @@ async function adicionarDado(registro) {
         consultarDados();
     } catch (erro) { console.error('Erro:', erro); }
 }
-
 // --- CÁLCULOS E RENDERIZAÇÃO ---
 async function consultarDados() {
     try {
@@ -187,7 +180,6 @@ async function consultarDados() {
         
     } catch (erro) { console.error('Erro:', erro); }
 }
-
 // --- EDIÇÃO E EXCLUSÃO ---
 function prepararEdicao(id, nome, sexo, data_nascimento, data_admissao, tempo_averbado_dias) {
     // Leva o usuário para a tela de cadastro para editar
@@ -232,7 +224,6 @@ async function deletarDado(id) {
         } catch (erro) { console.error('Erro:', erro); }
     }
 }
-
 // --- SISTEMA DE PESQUISA NA FILA ---
 document.getElementById('pesquisaNome').addEventListener('input', function() {
     // Pega o que foi digitado e transforma tudo em minúsculo para facilitar a comparação
@@ -254,3 +245,56 @@ document.getElementById('pesquisaNome').addEventListener('input', function() {
         }
     });
 });
+// --- FUNÇÃO PARA EXPORTAR A TABELA PARA EXCEL (CSV) ---
+function exportarParaExcel() {
+    // 1. Pega a tabela HTML que está na tela
+    const tabela = document.querySelector('.tabela-excel');
+    if (!tabela) {
+        alert("Nenhuma tabela encontrada para exportar.");
+        return;
+    }
+
+    let csv = [];
+    // 2. O código '\uFEFF' (BOM) avisa ao Excel que o arquivo tem acentos (UTF-8)
+    let csvContent = "\uFEFF"; 
+    
+    // 3. Pega todas as linhas da tabela (cabeçalho + dados)
+    const linhas = tabela.querySelectorAll('tr');
+    
+    for (let i = 0; i < linhas.length; i++) {
+        let linhaArray = [];
+        const colunas = linhas[i].querySelectorAll('th, td');
+        
+        // 4. O '- 1' no final do for serve para IGNORAR a última coluna (que tem os botões de Editar/Excluir)
+        for (let j = 0; j < colunas.length - 1; j++) {
+            // Limpa quebras de linha que possam estragar o CSV
+            let dado = colunas[j].innerText.replace(/(\r\n|\n|\r)/gm, "").trim();
+            
+            // Se o texto tiver ponto e vírgula, protege com aspas para não quebrar a coluna
+            if (dado.includes(';') || dado.includes('"')) {
+                dado = '"' + dado.replace(/"/g, '""') + '"';
+            }
+            linhaArray.push(dado);
+        }
+        // Junta as colunas com ponto e vírgula (Padrão do Excel no Brasil)
+        csv.push(linhaArray.join(';'));
+    }
+
+    // 5. Junta todas as linhas com quebra de linha real
+    csvContent += csv.join('\n');
+
+    // 6. Cria um "arquivo fantasma" na memória do navegador
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    
+    // 7. Cria um link invisível, clica nele para baixar e depois destrói o link
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    // Cria o nome do arquivo com a data de hoje
+    const dataHoje = new Date().toISOString().split('T')[0];
+    link.setAttribute("download", `Fila_Prioridade_${dataHoje}.csv`);
+    
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}

@@ -318,3 +318,32 @@ body.dark-mode .tabela-excel tr:hover { background-color: #2a2a2a; }
 /* Ajustes de textos secundários */
 body.dark-mode .card-atalho p, body.dark-mode .info-contato small { color: #aaa; }
 body.dark-mode .header-config { border-color: #333; }
+
+/* --- BOTÃO EXPORTAR EXCEL --- */
+.btn-exportar {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background-color: #217346;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-bottom: 15px;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.btn-exportar:hover {
+    background-color: #1a5c37;
+    transform: translateY(-2px);
+}
+
+body.dark-mode .btn-exportar {
+    background-color: #27ae60;
+}
+body.dark-mode .btn-exportar:hover {
+    background-color: #2ecc71;
+}

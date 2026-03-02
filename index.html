@@ -120,6 +120,13 @@
                     <input type="text" id="pesquisaNome" placeholder="Pesquisar por nome...">
                 </div>
 
+                <button onclick="exportarParaExcel()" class="btn-exportar">
+                    <span class="icone">
+                    <img src="img/exportar.svg" alt="Exportar para Excel" class="icone-imagem">
+                    </span> 
+                    <span class="texto-menu">Exportar para Excel</span>
+                </button>
+
                 <div class="tabela-container">
                     <table class="tabela-excel">
                         <thead>
@@ -141,7 +148,7 @@
             </section>
         </main>
     </div>
-    
+
     <div id="painel-config" class="painel-config fechado">
         <div class="header-config">
             <h2>Configurações</h2>
