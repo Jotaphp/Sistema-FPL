@@ -1,9 +1,50 @@
 const formulario = document.getElementById('formulario');
 const listaDados = document.getElementById('listaDados');
 const tabelaDados = document.getElementById('tabelaDados'); // Nova referência para a tabela
-let idEdicao = null; 
+let idEdicao = null;
 
-document.addEventListener('DOMContentLoaded', consultarDados);
+// --- FUNÇÃO PARA RECOLHER/EXPANDIR O MENU ---
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    // O toggle liga e desliga a classe 'recolhida'
+    sidebar.classList.toggle('recolhida');
+}
+
+// --- SISTEMA DE CONFIGURAÇÕES E MODO ESCURO ---
+
+// Abre e fecha o painel de configurações
+function toggleConfiguracoes() {
+    const painel = document.getElementById('painel-config');
+    painel.classList.toggle('aberto');
+}
+
+// Ativa ou desativa a classe do Modo Escuro
+function alternarModoEscuro() {
+    const btnSwitch = document.getElementById('toggle-dark-mode');
+    
+    if (btnSwitch.checked) {
+        document.body.classList.add('dark-mode');
+        localStorage.setItem('temaSistema', 'escuro'); // Salva no navegador
+    } else {
+        document.body.classList.remove('dark-mode');
+        localStorage.setItem('temaSistema', 'claro'); // Salva no navegador
+    }
+}
+
+// Verifica a preferência salva assim que a página carrega
+document.addEventListener('DOMContentLoaded', () => {
+    const temaSalvo = localStorage.getItem('temaSistema');
+    const btnSwitch = document.getElementById('toggle-dark-mode');
+
+    // Se a pessoa tinha deixado no escuro antes de fechar o sistema, volta escuro!
+    if (temaSalvo === 'escuro') {
+        document.body.classList.add('dark-mode');
+        btnSwitch.checked = true;
+    }
+    
+    // (A chamada do consultarDados() original continua aqui)
+    consultarDados(); 
+});
 
 // --- SISTEMA DE NAVEGAÇÃO DO MENU ---
 function navegar(idTelaAlvo) {
@@ -58,7 +99,6 @@ async function adicionarDado(registro) {
     } catch (erro) { console.error('Erro:', erro); }
 }
 
-// --- CÁLCULOS E RENDERIZAÇÃO ---
 // --- CÁLCULOS E RENDERIZAÇÃO ---
 async function consultarDados() {
     try {

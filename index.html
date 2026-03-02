@@ -8,23 +8,66 @@
 </head>
 <body>
     <div class="app-container">
-        <aside class="sidebar">
-            <h2>Sistema FPL</h2>
+        <aside class="sidebar recolhida" id="sidebar">
+            <div class="sidebar-header">
+                <button id="btn-toggle" onclick="toggleSidebar()">
+                    <img src="img/menu.svg" alt="Menu" class="icone-imagem-menu">
+                </button>
+                <img src="img/logo_FPL.png" alt="Logo FPL" class="logo-sidebar texto-menu">
+            </div>
             <nav>
-                <button id="btn-inicial" class="menu-btn ativo" onclick="navegar('inicial')">🏠 Tela Inicial</button>
-                <button id="btn-cadastro" class="menu-btn" onclick="navegar('cadastro')">📝 Cadastro</button>
-                <button id="btn-fila" class="menu-btn" onclick="navegar('fila')">📊 Fila Completa</button>
+                <button id="btn-inicial" class="menu-btn ativo" onclick="navegar('inicial')">
+                    <span class="icone">
+                        <img src="img/casa.svg" alt="Ícone Início" class="icone-imagem">
+                    </span> 
+                    <span class="texto-menu">Tela Inicial</span>
+                </button>
+                
+                <button id="btn-cadastro" class="menu-btn" onclick="navegar('cadastro')">
+                    <span class="icone">
+                        <img src="img/cadastro.svg" alt="Ícone Cadastro" class="icone-imagem">
+                    </span> 
+                    <span class="texto-menu">Cadastro</span>
+                </button>
+
+                <button id="btn-fila" class="menu-btn" onclick="navegar('fila')">
+                    <span class="icone">
+                        <img src="img/fila.svg" alt="Ícone Fila" class="icone-imagem">
+                    </span> 
+                    <span class="texto-menu">Fila Completa</span>
+                </button>
             </nav>
+            <div class="sidebar-footer">
+                <button id="btn-config" class="menu-btn" onclick="toggleConfiguracoes()">
+                    <span class="icone">
+                        <img src="img/configuracoes.svg" alt="Configurações" class="icone-imagem">
+                    </span> 
+                    <span class="texto-menu">Configurações</span>
+                </button>
+            </div>
         </aside>
 
         <main class="content">
-            
             <section id="tela-inicial" class="tela">
-                <h1>Bem-vindo ao Sistema</h1>
-                <p>Utilize o menu lateral para navegar entre as opções.</p>
-                <div class="card-boas-vindas">
-                    <h3>Visão Geral</h3>
-                    <p>Este sistema gerencia a fila de prioridade para aposentadoria baseada no cálculo de Índices, Tempo de Contribuição e Idade.</p>
+                
+                <img src="img/logo_FPL.png" alt="Logo Sistema de Fila de Prioridade" class="logo-principal">
+                <p>Visão Geral: Este sistema gerencia a fila de prioridade para aposentadoria baseada no cálculo de Índices, Tempo de Contribuição e Idade.</p>
+
+                <div class="cards-atalho">
+                    <div class="card-atalho" onclick="navegar('cadastro')">
+                        <div class="card-icone">
+                            <img src="img/cadastro.svg" alt="Novo Cadastro" class="icone-imagem-card">
+                        </div>
+                        <h3>Novo Cadastro</h3>
+                        <p>Adicionar ou editar servidores no sistema.</p>
+                    </div>
+                    <div class="card-atalho" onclick="navegar('fila')">
+                        <div class="card-icone">
+                            <img src="img/fila.svg" alt="Fila Completa" class="icone-imagem-card">
+                        </div>
+                        <h3>Fila Completa</h3>
+                        <p>Visualizar a ordem de prioridade calculada.</p>
+                    </div>
                 </div>
             </section>
 
@@ -72,8 +115,9 @@
             </section>
             <section id="tela-fila" class="tela oculta">
                 <h1>Fila de Prioridade</h1>
-                <div class="pesquisa-container">
-                    <input type="text" id="pesquisaNome" placeholder="🔍 Pesquisar por nome...">
+               <div class="pesquisa-container">
+                    <img src="img/lupa.svg" alt="Lupa" class="icone-busca">
+                    <input type="text" id="pesquisaNome" placeholder="Pesquisar por nome...">
                 </div>
 
                 <div class="tabela-container">
@@ -97,6 +141,24 @@
             </section>
         </main>
     </div>
+    
+    <div id="painel-config" class="painel-config fechado">
+        <div class="header-config">
+            <h2>Configurações</h2>
+            <button onclick="toggleConfiguracoes()" class="btn-fechar-config">✖</button>
+        </div>
+        
+        <div class="opcoes-config">
+            <div class="opcao-toggle">
+                <span class="texto-bold">Modo Escuro</span>
+                <label class="switch">
+                    <input type="checkbox" id="toggle-dark-mode" onchange="alternarModoEscuro()">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+        </div>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>
