@@ -1,57 +1,51 @@
 const formulario = document.getElementById('formulario');
 const listaDados = document.getElementById('listaDados');
-const tabelaDados = document.getElementById('tabelaDados'); // Nova referência para a tabela
+const tabelaDados = document.getElementById('tabelaDados'); // Tabela Fila Completa
 let idEdicao = null;
 
 // --- FUNÇÃO PARA RECOLHER/EXPANDIR O MENU ---
 function toggleSidebar() {
     const sidebar = document.getElementById('sidebar');
-    // O toggle liga e desliga a classe 'recolhida'
     sidebar.classList.toggle('recolhida');
 }
+
 // --- SISTEMA DE CONFIGURAÇÕES E MODO ESCURO ---
-// Abre e fecha o painel de configurações
 function toggleConfiguracoes() {
     const painel = document.getElementById('painel-config');
     painel.classList.toggle('aberto');
 }
-// Ativa ou desativa a classe do Modo Escuro
+
 function alternarModoEscuro() {
     const btnSwitch = document.getElementById('toggle-dark-mode');
-    
     if (btnSwitch.checked) {
         document.body.classList.add('dark-mode');
-        localStorage.setItem('temaSistema', 'escuro'); // Salva no navegador
+        localStorage.setItem('temaSistema', 'escuro'); 
     } else {
         document.body.classList.remove('dark-mode');
-        localStorage.setItem('temaSistema', 'claro'); // Salva no navegador
+        localStorage.setItem('temaSistema', 'claro'); 
     }
 }
-// Verifica a preferência salva assim que a página carrega
+
 document.addEventListener('DOMContentLoaded', () => {
     const temaSalvo = localStorage.getItem('temaSistema');
     const btnSwitch = document.getElementById('toggle-dark-mode');
 
-    // Se a pessoa tinha deixado no escuro antes de fechar o sistema, volta escuro!
     if (temaSalvo === 'escuro') {
         document.body.classList.add('dark-mode');
-        btnSwitch.checked = true;
+        if(btnSwitch) btnSwitch.checked = true;
     }
-    
-    // (A chamada do consultarDados() original continua aqui)
     consultarDados(); 
 });
+
 // --- SISTEMA DE NAVEGAÇÃO DO MENU ---
 function navegar(idTelaAlvo) {
-    // 1. Esconde todas as telas
     document.querySelectorAll('.tela').forEach(tela => tela.classList.add('oculta'));
-    // 2. Tira a classe 'ativo' de todos os botões do menu
     document.querySelectorAll('.menu-btn').forEach(btn => btn.classList.remove('ativo'));
     
-    // 3. Mostra a tela desejada e marca o botão como ativo
     document.getElementById(`tela-${idTelaAlvo}`).classList.remove('oculta');
     document.getElementById(`btn-${idTelaAlvo}`).classList.add('ativo');
 }
+
 // --- LÓGICA DO FORMULÁRIO ---
 formulario.addEventListener('submit', async function(evento) {
     evento.preventDefault();
@@ -92,7 +86,8 @@ async function adicionarDado(registro) {
         consultarDados();
     } catch (erro) { console.error('Erro:', erro); }
 }
-// --- CÁLCULOS E RENDERIZAÇÃO ---
+
+// --- CÁLCULOS PRINCIPAIS ---
 async function consultarDados() {
     try {
         const resposta = await fetch('http://localhost:3000/registros');
@@ -120,69 +115,107 @@ async function consultarDados() {
             reg.pontuacaoFila = indice - (idade + tempoIAE + tempoAverbado + tempoFicticio);
         });
 
-        // Limpa a Lista (Cadastro) e a Tabela (Fila)
-        listaDados.innerHTML = '';
-        tabelaDados.innerHTML = '';
+        // 2. Separa e Renderiza as Telas
+        renderizarCadastro(registros);
+        renderizarFilaCompleta(registros);
+        renderizarFilaJudicial(registros);
 
-        // =========================================================
-        // 2. RENDERIZA A TELA DE CADASTRO (Últimos 5 adicionados)
-        // =========================================================
-        // Cria uma cópia da lista, ordena pelo ID (maior pro menor) e corta os 5 primeiros
-        const ultimosCadastrados = [...registros].sort((a, b) => b.id - a.id).slice(0, 5);
+    } catch (erro) { console.error('Erro:', erro); }
+}
+
+// =========================================================
+// FUNÇÕES DE RENDERIZAÇÃO DAS TELAS
+// =========================================================
+
+function renderizarCadastro(registros) {
+    listaDados.innerHTML = '';
+    const ultimosCadastrados = [...registros].sort((a, b) => b.id - a.id).slice(0, 5);
+    
+    ultimosCadastrados.forEach(function(reg) {
+        const dataAdmFormatada = reg.data_admissao.split('-').reverse().join('/');
+        const li = document.createElement('li');
         
-        ultimosCadastrados.forEach(function(reg) {
-            const dataAdmFormatada = reg.data_admissao.split('-').reverse().join('/');
-            const li = document.createElement('li');
-            
-            li.innerHTML = `
-                <div class="info-contato">
-                    <h3>${reg.nome}</h3>
-                    <small>Admissão: ${dataAdmFormatada} | Adicionado recentemente</small>
-                </div>
+        li.innerHTML = `
+            <div class="info-contato">
+                <h3>${reg.nome}</h3>
+                <small>Admissão: ${dataAdmFormatada} | Adicionado recentemente</small>
+            </div>
+            <div class="acoes-contato">
+                <button class="btn-editar" onclick="prepararEdicao(${reg.id}, '${reg.nome}', '${reg.sexo}', '${reg.data_nascimento}', '${reg.data_admissao}', ${reg.tempo_averbado_dias})">Editar</button>
+                <button class="btn-excluir" onclick="deletarDado(${reg.id})">Excluir</button>
+            </div>
+        `;
+        listaDados.appendChild(li);
+    });
+}
+
+function renderizarFilaCompleta(registros) {
+    tabelaDados.innerHTML = '';
+    
+    // Filtra apenas a fila NORMAL e ordena pela pontuação
+    const filaNormal = registros.filter(d => d.tipo_fila !== 'judicial');
+    filaNormal.sort((a, b) => a.pontuacaoFila - b.pontuacaoFila);
+
+    filaNormal.forEach(function(reg, index) {
+        const dataNascFormatada = reg.data_nascimento.split('-').reverse().join('/');
+        const dataAdmFormatada = reg.data_admissao.split('-').reverse().join('/');
+        const pontuacaoArredondada = Math.round(reg.pontuacaoFila);
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td class="posicao-destaque">${index + 1}º</td>
+            <td>${pontuacaoArredondada}</td>
+            <td>${reg.nome}</td>
+            <td>${reg.sexo}</td>
+            <td>${dataNascFormatada}</td>
+            <td>${dataAdmFormatada}</td>
+            <td>${reg.tempo_averbado_dias}</td>
+            <td>
                 <div class="acoes-contato">
+                    <button onclick="moverParaJudicial(${reg.id}, '${reg.nome}')" class="btn-judicial" title="Mover para Fila Judicial">⚖️ Judicial</button>
                     <button class="btn-editar" onclick="prepararEdicao(${reg.id}, '${reg.nome}', '${reg.sexo}', '${reg.data_nascimento}', '${reg.data_admissao}', ${reg.tempo_averbado_dias})">Editar</button>
                     <button class="btn-excluir" onclick="deletarDado(${reg.id})">Excluir</button>
                 </div>
-            `;
-            listaDados.appendChild(li);
-        });
-
-        // =========================================================
-        // 3. RENDERIZA A TELA DA FILA (Ordenação Matemática Completa)
-        // =========================================================
-        // Ordena a lista original pela pontuação calculada
-        registros.sort((a, b) => a.pontuacaoFila - b.pontuacaoFila);
-
-        registros.forEach(function(reg, posicaoIndex) {
-            const dataNascFormatada = reg.data_nascimento.split('-').reverse().join('/');
-            const dataAdmFormatada = reg.data_admissao.split('-').reverse().join('/');
-            const pontuacaoArredondada = Math.round(reg.pontuacaoFila);
-            const posicaoFila = posicaoIndex + 1;
-
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td class="posicao-destaque">${posicaoFila}º</td>
-                <td>${pontuacaoArredondada}</td>
-                <td>${reg.nome}</td>
-                <td>${reg.sexo}</td>
-                <td>${dataNascFormatada}</td>
-                <td>${dataAdmFormatada}</td>
-                <td>${reg.tempo_averbado_dias}</td>
-                <td>
-                    <div class="acoes-contato">
-                        <button class="btn-editar" onclick="prepararEdicao(${reg.id}, '${reg.nome}', '${reg.sexo}', '${reg.data_nascimento}', '${reg.data_admissao}', ${reg.tempo_averbado_dias})">Editar</button>
-                        <button class="btn-excluir" onclick="deletarDado(${reg.id})">Excluir</button>
-                    </div>
-                </td>
-            `;
-            tabelaDados.appendChild(tr);
-        });
-        
-    } catch (erro) { console.error('Erro:', erro); }
+            </td>
+        `;
+        tabelaDados.appendChild(tr);
+    });
 }
+
+function renderizarFilaJudicial(registros) {
+    const tbodyJudicial = document.getElementById('lista-fila-judicial');
+    if (!tbodyJudicial) return;
+    tbodyJudicial.innerHTML = '';
+
+    // Filtra APENAS quem é judicial
+    let filaJudicial = registros.filter(d => d.tipo_fila === 'judicial');
+
+    // Ordena pela data mais próxima
+    filaJudicial.sort((a, b) => {
+        function converterParaData(dataBR) {
+            if (!dataBR || dataBR === "Não Determinado") return new Date('2099-12-31'); 
+            const partes = dataBR.split('/');
+            if (partes.length !== 3) return new Date('2099-12-31');
+            return new Date(`${partes[2]}-${partes[1]}-${partes[0]}`); 
+        }
+        return converterParaData(a.tempo_entrega) - converterParaData(b.tempo_entrega);
+    });
+
+    filaJudicial.forEach((reg, index) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td class="posicao-destaque">${index + 1}º</td>
+            <td>${reg.nome}</td>
+            <td style="font-weight: bold; color: ${reg.tempo_entrega === 'Não Determinado' ? '#666' : '#d9534f'};">
+                ${reg.tempo_entrega}
+            </td>
+        `;
+        tbodyJudicial.appendChild(tr);
+    });
+}
+
 // --- EDIÇÃO E EXCLUSÃO ---
 function prepararEdicao(id, nome, sexo, data_nascimento, data_admissao, tempo_averbado_dias) {
-    // Leva o usuário para a tela de cadastro para editar
     navegar('cadastro'); 
 
     document.getElementById('nome').value = nome;
@@ -212,7 +245,6 @@ async function salvarEdicao(id, registro) {
             body: JSON.stringify(registro)
         });
         consultarDados();
-        navegar('fila'); // Após editar, volta para a fila para ver o resultado
     } catch (erro) { console.error('Erro ao atualizar:', erro); }
 }
 
@@ -224,30 +256,46 @@ async function deletarDado(id) {
         } catch (erro) { console.error('Erro:', erro); }
     }
 }
-// --- SISTEMA DE PESQUISA NA FILA ---
-document.getElementById('pesquisaNome').addEventListener('input', function() {
-    // Pega o que foi digitado e transforma tudo em minúsculo para facilitar a comparação
+
+// --- SISTEMA DE PESQUISA NAS FILAS ---
+
+// Pesquisa Fila Completa
+document.getElementById('pesquisaNome')?.addEventListener('input', function() {
     const termoBusca = this.value.toLowerCase();
-    
-    // Pega todas as linhas (tr) que estão dentro do corpo da tabela (tbody)
     const linhasTabela = document.querySelectorAll('#tabelaDados tr');
 
-    // Passa por cada linha da tabela
     linhasTabela.forEach(function(linha) {
-        // O nome está na 3ª coluna (índice 2, pois começa no 0: Pos, Índice, Nome)
         const nomeNaColuna = linha.cells[2].textContent.toLowerCase();
-
-        // Se o nome na coluna incluir o que foi digitado, mostra a linha. Se não, esconde.
         if (nomeNaColuna.includes(termoBusca)) {
-            linha.style.display = ''; // Volta a exibir (padrão)
+            linha.style.display = ''; 
         } else {
-            linha.style.display = 'none'; // Esconde a linha
+            linha.style.display = 'none'; 
         }
     });
 });
+
+// --- FUNÇÃO MOVER PARA JUDICIAL ---
+async function moverParaJudicial(id, nome) {
+    let dataInput = prompt(`Mover ${nome} para a Fila Judicial.\n\nDigite a data limite de entrega (ex: 15/10/2026) ou deixe em branco para "Não Determinado":`);
+    
+    if (dataInput === null) return; 
+
+    if (dataInput.trim() === "") {
+        dataInput = "Não Determinado";
+    }
+
+    try {
+        await fetch(`http://localhost:3000/mover-judicial/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ tempo_entrega: dataInput })
+        });
+        consultarDados(); 
+    } catch (erro) { console.error('Erro ao mover:', erro); }
+}
+
 // --- FUNÇÃO PARA EXPORTAR A TABELA PARA EXCEL (CSV) ---
 function exportarParaExcel() {
-    // 1. Pega a tabela HTML que está na tela
     const tabela = document.querySelector('.tabela-excel');
     if (!tabela) {
         alert("Nenhuma tabela encontrada para exportar.");
@@ -255,42 +303,31 @@ function exportarParaExcel() {
     }
 
     let csv = [];
-    // 2. O código '\uFEFF' (BOM) avisa ao Excel que o arquivo tem acentos (UTF-8)
     let csvContent = "\uFEFF"; 
     
-    // 3. Pega todas as linhas da tabela (cabeçalho + dados)
     const linhas = tabela.querySelectorAll('tr');
     
     for (let i = 0; i < linhas.length; i++) {
         let linhaArray = [];
         const colunas = linhas[i].querySelectorAll('th, td');
         
-        // 4. O '- 1' no final do for serve para IGNORAR a última coluna (que tem os botões de Editar/Excluir)
         for (let j = 0; j < colunas.length - 1; j++) {
-            // Limpa quebras de linha que possam estragar o CSV
             let dado = colunas[j].innerText.replace(/(\r\n|\n|\r)/gm, "").trim();
-            
-            // Se o texto tiver ponto e vírgula, protege com aspas para não quebrar a coluna
             if (dado.includes(';') || dado.includes('"')) {
                 dado = '"' + dado.replace(/"/g, '""') + '"';
             }
             linhaArray.push(dado);
         }
-        // Junta as colunas com ponto e vírgula (Padrão do Excel no Brasil)
         csv.push(linhaArray.join(';'));
     }
 
-    // 5. Junta todas as linhas com quebra de linha real
     csvContent += csv.join('\n');
 
-    // 6. Cria um "arquivo fantasma" na memória do navegador
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     
-    // 7. Cria um link invisível, clica nele para baixar e depois destrói o link
     const link = document.createElement("a");
     link.setAttribute("href", url);
-    // Cria o nome do arquivo com a data de hoje
     const dataHoje = new Date().toISOString().split('T')[0];
     link.setAttribute("download", `Fila_Prioridade_${dataHoje}.csv`);
     

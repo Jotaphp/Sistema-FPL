@@ -8,6 +8,7 @@
 </head>
 <body>
     <div class="app-container">
+        
         <aside class="sidebar recolhida" id="sidebar">
             <div class="sidebar-header">
                 <button id="btn-toggle" onclick="toggleSidebar()">
@@ -15,6 +16,7 @@
                 </button>
                 <img src="img/logo_FPL.png" alt="Logo FPL" class="logo-sidebar texto-menu">
             </div>
+            
             <nav>
                 <button id="btn-inicial" class="menu-btn ativo" onclick="navegar('inicial')">
                     <span class="icone">
@@ -32,11 +34,19 @@
 
                 <button id="btn-fila" class="menu-btn" onclick="navegar('fila')">
                     <span class="icone">
-                        <img src="img/fila.svg" alt="Ícone Fila" class="icone-imagem">
+                        <img src="img/fila.svg" alt="Ícone Fila Completa" class="icone-imagem">
                     </span> 
                     <span class="texto-menu">Fila Completa</span>
                 </button>
+
+               <button id="btn-judicial" class="menu-btn" onclick="navegar('judicial')">
+                    <span class="icone">
+                        <img src="img/fila.svg" alt="Ícone Judicial" class="icone-imagem">
+                    </span> 
+                    <span class="texto-menu">Fila Judicial</span>
+                </button>
             </nav>
+            
             <div class="sidebar-footer">
                 <button id="btn-config" class="menu-btn" onclick="toggleConfiguracoes()">
                     <span class="icone">
@@ -48,8 +58,8 @@
         </aside>
 
         <main class="content">
+            
             <section id="tela-inicial" class="tela">
-                
                 <img src="img/logo_FPL.png" alt="Logo Sistema de Fila de Prioridade" class="logo-principal">
                 <p>Visão Geral: Este sistema gerencia a fila de prioridade para aposentadoria baseada no cálculo de Índices, Tempo de Contribuição e Idade.</p>
 
@@ -110,21 +120,22 @@
 
                     <button type="submit" id="btnSalvar">Salvar Registro</button>
                 </form>
+                
                 <h2>Últimos Cadastrados</h2>
                 <ul id="listaDados"></ul>
             </section>
+
             <section id="tela-fila" class="tela oculta">
                 <h1>Fila de Prioridade</h1>
-               <div class="pesquisa-container">
+                
+                <div class="pesquisa-container">
                     <img src="img/lupa.svg" alt="Lupa" class="icone-busca">
                     <input type="text" id="pesquisaNome" placeholder="Pesquisar por nome...">
                 </div>
 
                 <button onclick="exportarParaExcel()" class="btn-exportar">
-                    <span class="icone">
-                    <img src="img/exportar.svg" alt="Exportar para Excel" class="icone-imagem">
-                    </span> 
-                    <span class="texto-menu">Exportar para Excel</span>
+                    <img src="img/exportar.svg" alt="Exportar para Excel" class="icone-imagem" style="width: 20px; filter: invert(1);"> 
+                    Exportar Fila para Excel
                 </button>
 
                 <div class="tabela-container">
@@ -142,6 +153,25 @@
                             </tr>
                         </thead>
                         <tbody id="tabelaDados">
+                            </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="tela-judicial" class="tela oculta">
+                <h1>Fila Judicial</h1>
+                <p>Servidores com decisão judicial. Organizados pela data de entrega mais próxima.</p>
+                
+                <div class="tabela-container">
+                    <table class="tabela-excel">
+                        <thead>
+                            <tr>
+                                <th style="width: 80px; text-align: center;">Posição</th>
+                                <th>Nome do Servidor</th>
+                                <th>Tempo de Entrega</th>
+                            </tr>
+                        </thead>
+                        <tbody id="lista-fila-judicial">
                             </tbody>
                     </table>
                 </div>
