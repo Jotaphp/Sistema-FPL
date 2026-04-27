@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema FPL</title>
+    <title>Sistema FPL V3.0</title>
+    <link rel="icon" type="image/png" href="img/FPL_Icon.png">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -14,44 +15,39 @@
                 <button id="btn-toggle" onclick="toggleSidebar()">
                     <img src="img/menu.svg" alt="Menu" class="icone-imagem-menu">
                 </button>
-                <img src="img/logo_FPL.png" alt="Logo FPL" class="logo-sidebar texto-menu">
+             <img src="img/LogoEscuroFPL.png" alt="Logo FPL" id="logo-sidebar" class="logo-sidebar texto-menu">
             </div>
             
             <nav>
                 <button id="btn-inicial" class="menu-btn ativo" onclick="navegar('inicial')">
-                    <span class="icone">
-                        <img src="img/casa.svg" alt="Ícone Início" class="icone-imagem">
-                    </span> 
+                    <span class="icone"><img src="img/casa.svg" alt="Ícone Início" class="icone-imagem"></span> 
                     <span class="texto-menu">Tela Inicial</span>
                 </button>
                 
                 <button id="btn-cadastro" class="menu-btn" onclick="navegar('cadastro')">
-                    <span class="icone">
-                        <img src="img/cadastro.svg" alt="Ícone Cadastro" class="icone-imagem">
-                    </span> 
-                    <span class="texto-menu">Cadastro</span>
+                    <span class="icone"><img src="img/cadastro.svg" alt="Ícone Cadastro" class="icone-imagem"></span> 
+                    <span class="texto-menu">Novo Cadastro</span>
                 </button>
 
-                <button id="btn-fila" class="menu-btn" onclick="navegar('fila')">
-                    <span class="icone">
-                        <img src="img/fila.svg" alt="Ícone Fila Completa" class="icone-imagem">
-                    </span> 
-                    <span class="texto-menu">Fila Completa</span>
+                <button id="btn-servidores" class="menu-btn" onclick="navegar('servidores')">
+                    <span class="icone"><img src="img/servidores.svg" alt="Ícone Servidores" class="icone-imagem"></span> 
+                    <span class="texto-menu">Servidores</span>
+                </button>
+
+                <button id="btn-prioridade" class="menu-btn" onclick="navegar('prioridade')">
+                    <span class="icone"><img src="img/fila.svg" alt="Ícone Fila Prioridade" class="icone-imagem"></span> 
+                    <span class="texto-menu">Fila de Prioridade</span>
                 </button>
 
                <button id="btn-judicial" class="menu-btn" onclick="navegar('judicial')">
-                    <span class="icone">
-                        <img src="img/fila.svg" alt="Ícone Judicial" class="icone-imagem">
-                    </span> 
+                    <span class="icone"><img src="img/judicial.svg" alt="Ícone Judicial" class="icone-imagem"></span> 
                     <span class="texto-menu">Fila Judicial</span>
                 </button>
             </nav>
             
             <div class="sidebar-footer">
                 <button id="btn-config" class="menu-btn" onclick="toggleConfiguracoes()">
-                    <span class="icone">
-                        <img src="img/configuracoes.svg" alt="Configurações" class="icone-imagem">
-                    </span> 
+                    <span class="icone"><img src="img/configuracoes.svg" alt="Configurações" class="icone-imagem"></span> 
                     <span class="texto-menu">Configurações</span>
                 </button>
             </div>
@@ -59,24 +55,26 @@
 
         <main class="content">
             
-            <section id="tela-inicial" class="tela">
-                <img src="img/logo_FPL.png" alt="Logo Sistema de Fila de Prioridade" class="logo-principal">
-                <p>Visão Geral: Este sistema gerencia a fila de prioridade para aposentadoria baseada no cálculo de Índices, Tempo de Contribuição e Idade.</p>
-
+           <section id="tela-inicial" class="tela">
+                <img src="img/LogoClaroFPL.png" alt="Logo Sistema FPL" id="logo-principal" class="logo-principal">
+                <p>Visão Geral: Este sistema gerencia o repositório de servidores e as filas de prioridade e judicial para aposentadoria.</p>
+                
                 <div class="cards-atalho">
                     <div class="card-atalho" onclick="navegar('cadastro')">
-                        <div class="card-icone">
-                            <img src="img/cadastro.svg" alt="Novo Cadastro" class="icone-imagem-card">
-                        </div>
+                        <div class="card-icone"><img src="img/cadastro.svg" alt="Novo Cadastro" class="icone-imagem-card"></div>
                         <h3>Novo Cadastro</h3>
-                        <p>Adicionar ou editar servidores no sistema.</p>
                     </div>
-                    <div class="card-atalho" onclick="navegar('fila')">
-                        <div class="card-icone">
-                            <img src="img/fila.svg" alt="Fila Completa" class="icone-imagem-card">
-                        </div>
-                        <h3>Fila Completa</h3>
-                        <p>Visualizar a ordem de prioridade calculada.</p>
+                    <div class="card-atalho" onclick="navegar('servidores')">
+                        <div class="card-icone"><img src="img/servidores.svg" alt="Servidores" class="icone-imagem-card"></div>
+                        <h3>Servidores</h3>
+                    </div>
+                    <div class="card-atalho" onclick="navegar('prioridade')">
+                        <div class="card-icone"><img src="img/fila.svg" alt="Fila de Prioridade" class="icone-imagem-card"></div>
+                        <h3>Fila de Prioridade</h3>
+                    </div>
+                    <div class="card-atalho" onclick="navegar('judicial')">
+                        <div class="card-icone"><img src="img/judicial.svg" alt="Fila Judicial" class="icone-imagem-card"></div>
+                        <h3>Fila Judicial</h3>
                     </div>
                 </div>
             </section>
@@ -85,6 +83,35 @@
                 <h1>Cadastro de Servidor</h1>
                 
                 <form id="formulario">
+                    <div class="linha-form">
+                        <div class="coluna">
+                            <label for="numeroPasta">Número da Pasta:</label>
+                            <input type="text" id="numeroPasta" required>
+                        </div>
+                        <div class="coluna">
+                            <label for="numeroDocumento">Número do Documento:</label>
+                            <input type="text" id="numeroDocumento" required>
+                        </div>
+                    </div>
+
+                    <div class="linha-form">
+                        <div class="coluna">
+                            <label for="situacao">Situação:</label>
+                            <select id="situacao" required>
+                                <option value="Ativo">Ativo</option>
+                                <option value="Inativo">Inativo</option>
+                            </select>
+                        </div>
+                        <div class="coluna">
+                            <label for="status">Status:</label>
+                            <select id="status" required>
+                                <option value="Não Feito">Não Feito</option>
+                                <option value="Para Atualizar">Para Atualizar</option>
+                                <option value="Finalizado">Finalizado</option>
+                            </select>
+                        </div>
+                    </div>
+
                     <div class="linha-form">
                         <div class="coluna">
                             <label for="nome">Nome Completo:</label>
@@ -117,20 +144,54 @@
                         <input type="number" id="mesesAverbados" placeholder="Meses" min="0" max="11" value="0" required>
                         <input type="number" id="diasAverbados" placeholder="Dias" min="0" max="30" value="0" required>
                     </div>
+                    <div class="linha-form"> 
+                        <div class="coluna">
+                            <label for="editDataFinalizacao">Data de Finalização (Edição):</label>
+                            <input type="text" id="editDataFinalizacao" placeholder="dd/mm/aaaa" disabled>
+                        </div>
+                        <div class="coluna">
+                            <label for="editTempoEntrega">Prazo de Entrega Judicial (Edição):</label>
+                            <input type="text" id="editTempoEntrega" placeholder="dd/mm/aaaa" disabled>
+                        </div>
+                    </div>
 
                     <button type="submit" id="btnSalvar">Salvar Registro</button>
                 </form>
-                
-                <h2>Últimos Cadastrados</h2>
-                <ul id="listaDados"></ul>
             </section>
 
-            <section id="tela-fila" class="tela oculta">
+            <section id="tela-servidores" class="tela oculta">
+                <h1>Todos os Servidores</h1>
+                
+                <div class="pesquisa-container">
+                    <img src="img/lupa.svg" alt="Lupa" class="icone-busca">
+                    <input type="text" id="pesquisaNomeServidor" placeholder="Pesquisar por nome ou pasta...">
+                </div>
+
+                <div class="tabela-container">
+                    <table class="tabela-excel">
+                       <thead>
+                            <tr>
+                                <th onclick="ordenarServidores('numero_pasta')" class="ordenavel" title="Clique para ordenar">Nº Pasta ↕</th>
+                                <th onclick="ordenarServidores('numero_documento')" class="ordenavel" title="Clique para ordenar">Nº Documento ↕</th>
+                                <th onclick="ordenarServidores('nome')" class="ordenavel" title="Clique para ordenar">Nome Completo ↕</th>
+                                <th onclick="ordenarServidores('situacao')" class="ordenavel" title="Clique para ordenar">Situação ↕</th>
+                                <th onclick="ordenarServidores('status')" class="ordenavel" title="Clique para ordenar">Status ↕</th>
+                                <th onclick="ordenarServidores('data_finalizacao')" class="ordenavel" title="Clique para ordenar">Data Finalização ↕</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="lista-servidores">
+                            </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="tela-prioridade" class="tela oculta">
                 <h1>Fila de Prioridade</h1>
                 
                 <div class="pesquisa-container">
                     <img src="img/lupa.svg" alt="Lupa" class="icone-busca">
-                    <input type="text" id="pesquisaNome" placeholder="Pesquisar por nome...">
+                    <input type="text" id="pesquisaNomePrioridade" placeholder="Pesquisar por nome...">
                 </div>
 
                 <button onclick="exportarParaExcel()" class="btn-exportar">
@@ -152,7 +213,7 @@
                                 <th>Ações</th>
                             </tr>
                         </thead>
-                        <tbody id="tabelaDados">
+                        <tbody id="tabelaDadosPrioridade">
                             </tbody>
                     </table>
                 </div>
@@ -169,7 +230,7 @@
                                 <th style="width: 80px; text-align: center;">Posição</th>
                                 <th>Nome do Servidor</th>
                                 <th>Tempo de Entrega</th>
-                            </tr>
+                                <th>Ações</th> </tr>
                         </thead>
                         <tbody id="lista-fila-judicial">
                             </tbody>
@@ -184,7 +245,6 @@
             <h2>Configurações</h2>
             <button onclick="toggleConfiguracoes()" class="btn-fechar-config">✖</button>
         </div>
-        
         <div class="opcoes-config">
             <div class="opcao-toggle">
                 <span class="texto-bold">Modo Escuro</span>
@@ -195,6 +255,12 @@
             </div>
         </div>
     </div>
+
+    <script src="script.js"></script>
+<div id="painel-config" class="painel-config fechado">
+        </div>
+
+    <div id="tooltip-global" class="tooltip-global"></div>
 
     <script src="script.js"></script>
 </body>
