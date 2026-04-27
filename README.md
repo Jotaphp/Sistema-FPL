@@ -1,14 +1,15 @@
-# 🗂️ Sistema de Fila de Prioridade para Laudos V2.3
+# 🗂️ Sistema de Fila de Prioridade para Laudos V3.0
 
 Um sistema web completo (Full-stack) desenvolvido para cadastrar e gerenciar dados de funcionários, servindo como base estrutural para uma futura fila de prioridade de aposentadoria.
 
-Este projeto foi construído do zero, implementando as quatro operações fundamentais de banco de dados (CRUD - Create, Read, Update, Delete) com uma arquitetura de cliente-servidor rodando localmente.
+Este projeto foi construído do zero e completamente moldavel.
 
 ## ✨ Funcionalidades
 
-- **Cadastro de Servidores:** Inserção de dados detalhados (Nome, Sexo, Data de Nascimento, Data de Admissão).
-- **Cálculo de Tempo Averbado:** Interface amigável para inserir Anos, Meses e Dias, com conversão automática matemática para o total de dias corridos no Back-end.
+- **Cadastro de Servidores:** Inserção de dados detalhados.
+- **Cálculo Dinâmico:** Utiliza das informações para fazer cálculos para aposentadoria especial.
 - **Listagem Dinâmica:** Visualização em tempo real dos dados armazenados no banco.
+- **3 Listas:** Separação das informações mais críticas e utilizável.
 - **Edição com Engenharia Reversa:** Capacidade de editar registros existentes, onde o sistema recalcula os dias totais de volta para Anos, Meses e Dias na interface do usuário.
 - **Exclusão Segura:** Remoção de registros com confirmação de segurança.
 
@@ -28,6 +29,10 @@ Este projeto foi construído do zero, implementando as quatro operações fundam
 - SQLite3 (Banco de dados relacional leve e embutido)
 
 ## Atualizações
+**Versão 3.0**
+- Extenção dos dados no cadastro
+- Implementação da "Tabela Mãe" com todas as informações
+- Polimento e otimização dos códigos
 
 **Versão 2.3**
 - Implementação de nova tela, fila judicial
